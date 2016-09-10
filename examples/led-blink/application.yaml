@@ -1,0 +1,22 @@
+api: 1
+name: hello
+lang: c++
+
+sources:
+  - main.cpp
+
+config:
+  BOARD:
+    desc: The target board
+    type: string
+    default: esp8266
+  BLINK_INTERVAL:
+    desc: The interval of blinking (in msec)
+    type: int
+    default: 1000
+  MainLED:
+    desc: The LED to be blinked
+    type: driver
+    driver: GPIO
+    pin: 13
+    pin_mode: output

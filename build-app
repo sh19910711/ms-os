@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+# Usage: build-app [app_path]
+require 'yaml'
+require 'FileUtils'
+
+class Application
+  def initialize(app_path)
+    @path = File.absolute_path(app_path)
+    @build_dir = 'build/'
+    @yaml = YAML.load(File.open(File.join(@path, 'application.yaml')).read)
+    validate
+  end
+
+  def generate_files
+    FileUtils.makedirs(@build_dir)
+
+    # Generate app.h
+    create_file(File.join(@build_dir, 'app.h'), <<EOF)
+#ifndef __BASEOS_APP_H__
+#define __BASEOS_APP_H__
+extern "C" {
+extern void setup();
+}
+#endif
+EOF
+
+    # Copy source files into the build_dir
+    objs = []
+    @yaml['sources'].each do |f|
+      if f =~ /^(.*)\.(.*)$/
+        unless ['cpp'].include?($2)
+          raise "#{f}: unsupported source file type: #{$2}"
+        end
+
+        dest_dir = File.join(@build_dir, File.dirname($1))
+        FileUtils.cp(File.join(@path, f), dest_dir)
+        objs << $1 + '.o'
+      else
+        raise "BUG: failed to extract file extension"
+      end
+    end
+
+    # Generate Resea app.yaml
+    create_file(File.join(@build_dir, 'app.yaml'), <<EOF)
+name: #{@yaml['name']}
+objs: [#{objs.join(',')}]
+EOF
+  end
+
+  private
+
+  def validate
+    if @yaml['api'] != 1
+      raise "unsupported API version (expected 1)"
+    end
+
+    if @yaml['lang'] != 'c++'
+      raise "unsupported language (expected c++)"
+    end
+  end
+
+  def create_file(path, s)
+    f = File.open(path, 'w')
+    f.write(s)
+    f.close()
+  end
+end
+
+
+app = Application.new(ARGV[0] || '.')
+app.generate_files

@@ -1,0 +1,6 @@
+BaseOS
+======
+
+License
+-------
+MIT
