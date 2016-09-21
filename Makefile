@@ -1,4 +1,11 @@
+ifeq ($(APP_DIR),)
+    $(error "APP_DIR is not set")
+endif
+
 build: image
+
+deploy:
+	echo "TODO: insert deploy command here"
 
 resea:
 	git clone https://github.com/resea/resea
