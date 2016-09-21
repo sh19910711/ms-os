@@ -4,11 +4,12 @@ require 'yaml'
 require 'FileUtils'
 
 class Application
-  def initialize(app_path)
+  def initialize(build_dir, app_path)
     @path = File.absolute_path(app_path)
-    @build_dir = 'build/'
+    @build_dir = build_dir
     @yaml = YAML.load(File.open(File.join(@path, 'application.yaml')).read)
     validate
+    @sources = Dir['api/*'] + @yaml['sources'].map {|f| File.join(@path, f) }
   end
 
   def generate_files
@@ -26,17 +27,11 @@ EOF
 
     # Copy source files into the build_dir
     objs = []
-    @yaml['sources'].each do |f|
-      if f =~ /^(.*)\.(.*)$/
-        unless ['cpp'].include?($2)
-          raise "#{f}: unsupported source file type: #{$2}"
-        end
-
-        dest_dir = File.join(@build_dir, File.dirname($1))
-        FileUtils.cp(File.join(@path, f), dest_dir)
-        objs << $1 + '.o'
-      else
-        raise "BUG: failed to extract file extension"
+    @sources.each do |path|
+      dest_dir = File.join(@build_dir, File.basename(path))
+      FileUtils.cp(path, dest_dir)
+      if File.extname(path) == '.cpp'
+        objs << File.basename(path, '.cpp') + '.o'
       end
     end
 
@@ -44,6 +39,9 @@ EOF
     create_file(File.join(@build_dir, 'app.yaml'), <<EOF)
 name: #{@yaml['name']}
 objs: [#{objs.join(',')}]
+requires:
+  - channel
+implements: []
 EOF
   end
 
@@ -67,5 +65,5 @@ EOF
 end
 
 
-app = Application.new(ARGV[0] || '.')
+app = Application.new(ARGV[0], ARGV[1])
 app.generate_files

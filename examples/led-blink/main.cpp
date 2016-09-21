@@ -1,11 +1,14 @@
-#include <app.h>
+#include "baseos.h"
+#include "GPIO.h"
+
 
 void setup() {
 
-    Timer.set_interval(BLINK_INTERVAL, [](){
-        if (MainLED.is_on())
-           MainLED.off();
-        else
-           MainLED.on();
-    });
+    GPIO.set_pin_mode(4, 1);
+    for (;;) {
+       GPIO.write(4, 1);
+       for (volatile int i=0; i < 0x10000; i++);
+       GPIO.write(4, 0);
+       for (volatile int i=0; i < 0x10000; i++);
+    }
 }
