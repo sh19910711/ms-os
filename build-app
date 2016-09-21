@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Usage: build-app [app_path]
 require 'yaml'
-require 'FileUtils'
+require 'fileutils'
 
 class Application
   def initialize(build_dir, app_path)
