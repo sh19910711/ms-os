@@ -4,7 +4,7 @@ endif
 
 build: image
 
-deploy:
+deploy: image
 	echo "TODO: insert deploy command here"
 
 resea:
