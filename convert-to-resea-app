@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# Usage: build-app [app_path]
+# Usage: convert-to-resea-app [app_path]
 require 'yaml'
 require 'fileutils'
 
