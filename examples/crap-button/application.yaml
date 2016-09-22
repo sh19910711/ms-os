@@ -1,0 +1,12 @@
+api: 1
+name: crap-button
+lang: c++
+
+sources:
+  - main.cpp
+
+config:
+  BOARD:
+    desc: The target board
+    type: string
+    default: esp8266
