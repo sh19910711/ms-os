@@ -10,6 +10,7 @@ class _GPIO {
     void set_pin_mode(int pin, int mode);
     void write(int pin, int value);
     int read(int pin);
+    bool is_on(int pin);
 };
 
 #endif

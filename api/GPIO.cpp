@@ -33,3 +33,9 @@ void _GPIO::write(int pin, int value) {
     result_t r;
     call_gpio_write(gpio_server, pin, value, &r);
 }
+
+
+bool _GPIO::is_on(int pin) {
+
+    return _GPIO::read(pin) != 0;
+}
