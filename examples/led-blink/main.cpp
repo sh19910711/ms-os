@@ -1,19 +1,15 @@
 #include "baseos.h"
 #include "GPIO.h"
-#include "arch/esp8266/finfo.h"
+#include "Timer.h"
 
-
-void loop() {
-    GPIO.write(4, 1);
-    for (volatile int i=0; i < 0x1000; i++);
-    GPIO.write(4, 0);
-    for (volatile int i=0; i < 0x500; i++);
-}
 
 void setup() {
 
-    GPIO.set_pin_mode(12, 1);
     GPIO.set_pin_mode(4, 1);
-    GPIO.write(12, 1);
-    finfo->set_loop(loop);
+    Timer.set_interval(1000, []() {
+        if (GPIO.is_on(4))
+            GPIO.write(4, 0);
+        else
+            GPIO.write(4, 1);
+    });
 }
