@@ -17,7 +17,7 @@ void loop() {
     int button = GPIO.read(5);
     if (button) {
         char buf[64];
-        finfo->http_request("133.242.229.85", 3000, "POST", "/crap",
+        finfo->http_request("133.242.229.85", 3000, "POST", "/clap",
                             "", "", 0, &buf, sizeof(buf));
     }
     
