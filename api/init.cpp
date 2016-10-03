@@ -1,11 +1,10 @@
 #include <resea.h>
-#include "baseos.h"
+#include "app.h"
 #include "loop.h"
 
 channel_t channel_server = 0;
 class _GPIO GPIO;
 class _Timer Timer;
-void setup();
 
 extern "C" void csapp_startup(void) {
 
