@@ -2,6 +2,10 @@
 #define __GPIO_H__
 
 #include <resea.h>
+#include <resea/gpio.h>
+
+// GPIO_OUTPUT_PIN, GPIO_INPUT_PIN, GPIO_HIGH, GPIO_LOW
+// are defined in resea/gpio.h
 
 class _GPIO {
     channel_t gpio_server;
