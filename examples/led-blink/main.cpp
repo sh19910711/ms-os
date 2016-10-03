@@ -1,15 +1,15 @@
-#include "baseos.h"
-#include "GPIO.h"
-#include "Timer.h"
+#include "app.h"
 
 
 void setup() {
+    static int i = 0;
 
-    GPIO.set_pin_mode(4, 1);
-    Timer.set_interval(1000, []() {
-        if (GPIO.is_on(4))
-            GPIO.write(4, 0);
+    Timer.set_interval(CONFIG_BLINK_INTERVAL, []() {
+        if (i % 2 == 0)
+            MainLED.on();
         else
-            GPIO.write(4, 1);
+            MainLED.off();
+
+        i++;
     });
 }

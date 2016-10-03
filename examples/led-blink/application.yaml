@@ -6,10 +6,6 @@ sources:
   - main.cpp
 
 config:
-  BOARD:
-    desc: The target board
-    type: string
-    default: esp8266
   BLINK_INTERVAL:
     desc: The interval of blinking (in msec)
     type: int
@@ -17,6 +13,4 @@ config:
   MainLED:
     desc: The LED to be blinked
     type: driver
-    driver: GPIO
-    pin: 13
-    pin_mode: output
+    driver: led
