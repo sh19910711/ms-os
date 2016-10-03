@@ -2,34 +2,102 @@
 # Usage: convert-to-resea-app [app_path]
 require 'yaml'
 require 'fileutils'
+require 'erb'
 
 class Application
   def initialize(build_dir, app_path)
-    @path = File.absolute_path(app_path)
+    @path      = File.absolute_path(app_path)
     @build_dir = build_dir
-    @yaml = YAML.load(File.open(File.join(@path, 'application.yaml')).read)
+    @yaml      = load_yaml(File.join(@path, 'application.yaml'))
+    @config    = load_yaml(File.join(@path, '.config.yaml'))
+
     validate
-    @sources = Dir['api/*'] + @yaml['sources'].map {|f| File.join(@path, f) }
+
+    @parts   = @config.select {|k, v| v['type'] == 'driver' }
+    @consts  = @config.select {|k, v| v['type'] != 'driver' }
+    @consts.each do |k, v|
+      @consts[k]['cpp_value'] = case v['type']
+                                when 'str'; '"' + v['value'] + '"'
+                                else; v['value']
+                                end
+    end
+    
+    @drivers = {}
+    @parts.each do |_, part|
+      driver_yaml = load_driver(part['driver'])
+      @drivers[driver_yaml['name']] = driver_yaml
+    end
+
+    @sources  = Dir[File.join('api', '*')]
+    @sources += [File.join(@build_dir, 'drivers.cpp')]
+    @sources += @yaml['sources'].map {|f| File.join(@path, f) }
+    @sources += @parts.map {|name, v| File.join(@build_dir, "_#{name}.cpp" ) }
   end
 
   def generate_files
     FileUtils.makedirs(@build_dir)
 
     # Generate app.h
-    create_file(File.join(@build_dir, 'app.h'), <<EOF)
+    b = binding
+    create_file(File.join(@build_dir, 'app.h'), ERB.new(<<EOF).result(b))
 #ifndef __BASEOS_APP_H__
 #define __BASEOS_APP_H__
-extern "C" {
+
+#include "baseos.h"
+
+<% @consts.each do |name, config| %>
+#define CONFIG_<%= name %> (<%= config['cpp_value'] %>)
+<% end %>
+
+<% @parts.each do |name, config| %>
+#include "_<%= name %>.h"
+extern class _<%= name %> <%= name %>;
+<% end %>
+
+void init_drivers();
 extern void setup();
-}
+
 #endif
 EOF
+
+    create_file(File.join(@build_dir, 'drivers.cpp'), ERB.new(<<EOF).result(b))
+#include "app.h"
+
+<% @parts.each do |name, config| %>
+class _<%= name %> <%= name %>;
+<% end %>
+
+void init_drivers() {
+
+<% @parts.each do |name, config| %>
+    <%= name %> = _<%= name %>();
+<% end %>
+}
+EOF
+
+    # drivers
+    @parts.each do |name, config|
+      cpp_erb = File.join('drivers', config['driver'], "#{config['driver']}.cpp.erb")
+      h_erb = File.join('drivers', config['driver'], "#{config['driver']}.h.erb")
+
+      class_name = "_#{name}" # used in .erb
+      b = binding
+
+      create_file(File.join(@build_dir, "#{class_name}.cpp"),
+        ERB.new(File.open(cpp_erb).read).result(b))
+      create_file(File.join(@build_dir, "#{class_name}.h"),
+        ERB.new(File.open(h_erb).read).result(b))
+    end
 
     # Copy source files into the build_dir
     objs = []
     @sources.each do |path|
       dest_dir = File.join(@build_dir, File.basename(path))
-      FileUtils.cp(path, dest_dir)
+
+      if not path.start_with?(@build_dir)
+        FileUtils.cp(path, dest_dir)
+      end
+
       if File.extname(path) == '.cpp'
         objs << File.basename(path, '.cpp') + '.o'
       end
@@ -41,19 +109,36 @@ name: #{@yaml['name']}
 objs: [#{objs.join(',')}]
 requires:
   - channel
+  - gpio
 implements: []
 EOF
   end
 
   private
 
+  def load_yaml(path)
+    YAML.load(File.open(path).read)
+  end
+
+  def load_driver(name)
+    load_yaml(File.join('drivers', name, 'driver.yaml'))
+  end
+
+  def to_class_name(name)
+    name.capitalize
+  end
+
   def validate
     if @yaml['api'] != 1
-      raise "unsupported API version (expected 1)"
+      raise 'unsupported API version (expected 1)'
     end
 
     if @yaml['lang'] != 'c++'
-      raise "unsupported language (expected c++)"
+      raise 'unsupported language (expected c++)'
+    end
+
+    if @config['BOARD']['value'] != 'esp8266'
+      raise 'unsupported board (only esp8266 is supported)'
     end
   end
 
