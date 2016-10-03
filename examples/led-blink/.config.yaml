@@ -1,5 +1,5 @@
 BOARD:
-  type: str
+  type: string
   value: esp8266
 BLINK_INTERVAL:
   type: int

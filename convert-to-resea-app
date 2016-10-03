@@ -17,7 +17,7 @@ class Application
     @consts  = @config.select {|k, v| v['type'] != 'driver' }
     @consts.each do |k, v|
       @consts[k]['cpp_value'] = case v['type']
-                                when 'str'; '"' + v['value'] + '"'
+                                when 'string'; '"' + v['value'] + '"'
                                 else; v['value']
                                 end
     end
