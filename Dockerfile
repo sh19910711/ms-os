@@ -14,4 +14,5 @@ ENV PATH=/usr/local/xtensa-lx106-elf/bin:$PATH
 
 ADD . /baseos
 WORKDIR /baseos
+RUN git submodule update
 CMD make deploy APP_DIR=/app

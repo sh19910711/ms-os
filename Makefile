@@ -7,9 +7,6 @@ build: image
 deploy: image
 	echo "TODO: insert deploy command here"
 
-resea:
-	git clone https://github.com/resea/resea
-
 resea/apps/csapp: resea
 	./convert-to-resea-app $@ $(APP_DIR)
 
