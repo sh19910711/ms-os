@@ -14,3 +14,5 @@ config:
     desc: The LED to be blinked
     type: driver
     driver: led
+    gpio:
+      pin: 5
