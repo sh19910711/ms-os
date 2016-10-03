@@ -1,0 +1,10 @@
+api: 1
+name: led
+lang: c++
+cpp:
+  class_name: LED
+  
+sources:
+  - led.cpp.erb
+
+config:

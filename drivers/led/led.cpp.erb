@@ -1,0 +1,16 @@
+#include "baseos.h"
+#include "GPIO.h"
+#include "<%= class_name %>.h"
+
+
+<%= class_name %>::<%= class_name %>() {
+    GPIO.set_pin_mode(<%= config["gpio"]["pin"] %>, GPIO_OUTPUT_PIN);
+}
+
+void <%= class_name %>::on() {
+    GPIO.write(<%= config["gpio"]["pin"] %>, GPIO_HIGH);
+}
+
+void <%= class_name %>::off() {
+    GPIO.write(<%= config["gpio"]["pin"] %>, GPIO_LOW);
+}
