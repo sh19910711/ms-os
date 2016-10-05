@@ -1,3 +1,4 @@
 [submodule "resea"]
 	path = resea
 	url = https://github.com/resea/resea
+        ignore = dirty
