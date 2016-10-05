@@ -12,6 +12,7 @@ extern "C" void csapp_startup(void) {
     GPIO  = _GPIO();
     Timer = _Timer();
 
+    init_drivers();
     setup();
     start_loop();
 }
