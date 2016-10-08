@@ -15,4 +15,4 @@ ENV PATH=/usr/local/xtensa-lx106-elf/bin:$PATH
 ADD . /baseos
 WORKDIR /baseos
 RUN git submodule update
-CMD make all APP_DIR=/app
+CMD make APP_DIR=/app
