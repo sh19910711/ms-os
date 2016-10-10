@@ -1,10 +1,11 @@
 api: 1
 name: led
 lang: c++
-cpp:
-  class_name: LED
-  
+
+cpp_class_name: LED
+
 sources:
-  - led.cpp.erb
+  - LED.cpp
+  - LED.h
 
 config:

@@ -21,17 +21,41 @@ class Application
                                 else; v['value']
                                 end
     end
-    
-    @drivers = {}
-    @parts.each do |_, part|
-      driver_yaml = load_driver(part['driver'])
-      @drivers[driver_yaml['name']] = driver_yaml
-    end
 
     @sources  = Dir[File.join('api', '*')]
     @sources += [File.join(@build_dir, 'drivers.cpp')]
     @sources += @yaml['sources'].map {|f| File.join(@path, f) }
-    @sources += @parts.map {|name, v| File.join(@build_dir, "_#{name}.cpp" ) }
+
+    @drivers = {}
+    @parts.each do |_, part|
+      driver_name = part['driver']
+
+      # create <driver_name>_args literal
+      args = {}
+      part.each do |k, v|
+        hash = case k
+               when 'interface'
+                 { interface: "DRIVER_#{v.upcase}" }
+               when 'gpio'
+                 { gpio_pin: v['pin'] }
+               else
+                 {}
+               end
+
+        args.merge!(hash)
+      end
+
+      part['cpp_args'] = args.map {|k, v| ".#{k}=#{v}" }
+
+      # load the driver
+      unless @drivers.include?(driver_name)
+        driver_yaml = load_driver(driver_name)
+        @drivers[driver_name] = driver_yaml
+        @sources += driver_yaml['sources'].map {|f| File.join('drivers', driver_name, f) }
+      end
+
+      part['driver_class_name'] = @drivers[driver_name]['cpp_class_name'] || driver_name
+    end
   end
 
   def generate_files
@@ -49,9 +73,17 @@ class Application
 #define CONFIG_<%= name %> (<%= config['cpp_value'] %>)
 <% end %>
 
+<% @drivers.each do |name, driver| %>
+struct <%= name %>_args {
+    int interface;
+    int gpio_pin;
+};
+
+#include "<%= driver['cpp_class_name'] %>.h"
+<% end %>
+
 <% @parts.each do |name, config| %>
-#include "_<%= name %>.h"
-extern class _<%= name %> <%= name %>;
+extern class <%= config['driver_class_name'] %> <%= name %>;
 <% end %>
 
 void init_drivers();
@@ -64,30 +96,17 @@ EOF
 #include "app.h"
 
 <% @parts.each do |name, config| %>
-class _<%= name %> <%= name %>;
+class <%= config['driver_class_name'] %> <%= name %>;
 <% end %>
 
 void init_drivers() {
 
 <% @parts.each do |name, config| %>
-    <%= name %> = _<%= name %>();
+    struct <%= config['driver'] %>_args <%= name %>_args = { <%= config['cpp_args'].join(', ') %> };
+    <%= name %> = <%= config['driver_class_name'] %>(&<%= name %>_args);
 <% end %>
 }
 EOF
-
-    # drivers
-    @parts.each do |name, config|
-      cpp_erb = File.join('drivers', config['driver'], "#{config['driver']}.cpp.erb")
-      h_erb = File.join('drivers', config['driver'], "#{config['driver']}.h.erb")
-
-      class_name = "_#{name}" # used in .erb
-      b = binding
-
-      create_file(File.join(@build_dir, "#{class_name}.cpp"),
-        ERB.new(File.open(cpp_erb).read).result(b))
-      create_file(File.join(@build_dir, "#{class_name}.h"),
-        ERB.new(File.open(h_erb).read).result(b))
-    end
 
     # Copy source files into the build_dir
     objs = []
