@@ -10,5 +10,5 @@ resea/apps/csapp: resea
 	./convert-to-resea-app $@ $(APP_DIR)
 
 $(APP_DIR)/$(APP_NAME).esp8266.image: $(wildcard api/*) $(APP_DIR)/application.yaml $(APP_DIR)/.config.yaml resea/apps/csapp
-	cd resea && make ARCH=esp8266 TARGET=kernel APPS="channel-server esp8266-driver csapp" TARGET_FILE=image # XXX
+	cd resea && make ARCH=esp8266 TARGET=kernel APPS="channel-server esp8266-driver csapp" TARGET_FILE=image CPPFLAGS=-Iapps/csapp
 	cp resea/image $@
