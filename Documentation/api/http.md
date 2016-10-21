@@ -8,8 +8,8 @@ Sending Requests
 
 ### request ###
 ```api:c++
-int ENV::request(const char *method, String url, const void *payload, String headers,
-                 void *resp);
+int HTTP::request(const char *method, String url, const void *payload, String headers,
+                  void *resp);
 ```
 
 Performs a HTTP request. It returns HTTP status code or 0 on unexpected errors.
@@ -36,7 +36,7 @@ if (status != 201)
 
 ### get ###
 ```api:c++
-int ENV::get(String url, String headers, void *resp);
+int HTTP::get(String url, String headers, void *resp);
 ```
 
 Performs a GET request. It returns HTTP status code or 0 on unexpected errors.
@@ -49,8 +49,8 @@ If `resp` is set, the response body is stored in `resp`. Other arguments are:
 
 ### post ###
 ```api:c++
-int ENV::post(String url, const void *payload, String headers,
-              void *resp);
+int HTTP::post(String url, const void *payload, String headers,
+               void *resp);
 ```
 
 Performs a POST request. It returns HTTP status code or 0 on unexpected errors.
@@ -77,8 +77,8 @@ if (String(resp) != "ok")
 
 ### put ###
 ```api:c++
-int ENV::put(String url, const void *payload, String headers,
-             void *resp);
+int HTTP::put(String url, const void *payload, String headers,
+              void *resp);
 ```
 
 Performs a PUT request. It returns HTTP status code or 0 on unexpected errors.
@@ -91,7 +91,7 @@ If `resp` is set, the response body is stored in `resp`. Other arguments are:
 
 ### delete ###
 ```api:c++
-int ENV::delete(String url, String headers, void *resp);
+int HTTP::delete(String url, String headers, void *resp);
 ```
 
 Performs a DELETE request. It returns HTTP status code or 0 on unexpected errors.
