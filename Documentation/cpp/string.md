@@ -24,6 +24,15 @@ string& operator + (const char *s);
 ```
 
 
+### c_str ###
+
+```api:c++
+const char *String::c_str();
+```
+
+Returns a content of object as `const char *` (ASCIIZ).
+
+
 ### find ###
 
 ```api:c++
