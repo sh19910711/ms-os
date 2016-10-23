@@ -1,6 +1,9 @@
 #include "loop.h"
-#include "arch/esp8266/finfo.h"
 
+// XXX
+#ifdef ARCH_ESP8266
+#include "arch/esp8266/finfo.h"
+#endif
 
 void start_loop() {
 
