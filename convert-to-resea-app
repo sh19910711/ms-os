@@ -60,14 +60,15 @@ class Application
 
   def generate_files
     FileUtils.makedirs(@build_dir)
+    FileUtils.makedirs(File.join(@build_dir, 'include'))
 
     # Generate app.h
     b = binding
-    create_file(File.join(@build_dir, 'app.h'), ERB.new(<<EOF).result(b))
+    create_file(File.join(@build_dir, 'include', 'app.h'), ERB.new(<<EOF).result(b))
 #ifndef __BASEOS_APP_H__
 #define __BASEOS_APP_H__
 
-#include "baseos.h"
+#include "../baseos.h"
 
 <% @consts.each do |name, config| %>
 #define CONFIG_<%= name %> (<%= config['cpp_value'] %>)
@@ -79,7 +80,7 @@ struct <%= name %>_args {
     int gpio_pin;
 };
 
-#include "<%= driver['cpp_class_name'] %>.h"
+#include "../<%= driver['cpp_class_name'] %>.h"
 <% end %>
 
 <% @parts.each do |name, config| %>
@@ -93,7 +94,7 @@ extern void setup();
 EOF
 
     create_file(File.join(@build_dir, 'drivers.cpp'), ERB.new(<<EOF).result(b))
-#include "app.h"
+#include <app.h>
 
 <% @parts.each do |name, config| %>
 class <%= config['driver_class_name'] %> <%= name %>;

@@ -6,6 +6,7 @@
 class _Device {
 public:
     NORETURN void reset();
+    NORETURN void reset(const char *errmsg);
 };
 
 #endif

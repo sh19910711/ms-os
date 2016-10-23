@@ -14,3 +14,10 @@ NORETURN void _Device::reset() {
     finfo->update(-1);
 #endif
 }
+
+
+NORETURN void _Device::reset(const char *errmsg) {
+
+    Logging.errorln(errmsg);
+    reset();
+}
