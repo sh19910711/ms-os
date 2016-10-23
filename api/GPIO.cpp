@@ -21,6 +21,14 @@ void _GPIO::set_pin_mode(int pin, int mode) {
 }
 
 
+int _GPIO::read_analog(int pin) {
+    result_t r;
+    int value;
+    call_gpio_read_analog(gpio_server, pin, &r, &value);
+    return value;
+}
+
+
 int _GPIO::read(int pin) {
     result_t r;
     int value;
