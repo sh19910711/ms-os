@@ -8,8 +8,8 @@ Sending Requests
 
 ### request ###
 ```api:c++
-int HTTP::request(const char *method, String url, const void *payload, String headers,
-                  void *resp);
+int HTTP::request(const char *method, String url, const void *payload, size_t payload_size, String headers,
+                  void *resp, size_t resp_size);
 ```
 
 Performs a HTTP request. It returns HTTP status code or 0 on unexpected errors.
@@ -36,7 +36,7 @@ if (status != 201)
 
 ### get ###
 ```api:c++
-int HTTP::get(String url, String headers, void *resp);
+int HTTP::get(String url, String headers, void *resp, size_t resp_size);
 ```
 
 Performs a GET request. It returns HTTP status code or 0 on unexpected errors.
@@ -49,8 +49,8 @@ If `resp` is set, the response body is stored in `resp`. Other arguments are:
 
 ### post ###
 ```api:c++
-int HTTP::post(String url, const void *payload, String headers,
-               void *resp);
+int HTTP::post(String url, const void *payload, size_t payload_size, size_t payload_size, String headers,
+               void *resp, size_t resp_size);
 ```
 
 Performs a POST request. It returns HTTP status code or 0 on unexpected errors.
@@ -77,8 +77,8 @@ if (String(resp) != "ok")
 
 ### put ###
 ```api:c++
-int HTTP::put(String url, const void *payload, String headers,
-              void *resp);
+int HTTP::put(String url, const void *payload, size_t payload_size, String headers,
+              void *resp, size_t resp_size);
 ```
 
 Performs a PUT request. It returns HTTP status code or 0 on unexpected errors.
@@ -89,9 +89,9 @@ If `resp` is set, the response body is stored in `resp`. Other arguments are:
 - `headers`: The request headers like `"Foo: bar\r\nBaz: 123"`.
 
 
-### delete ###
+### DELETE ###
 ```api:c++
-int HTTP::delete(String url, String headers, void *resp);
+int HTTP::DELETE(String url, String headers, void *resp, size_t resp_size);
 ```
 
 Performs a DELETE request. It returns HTTP status code or 0 on unexpected errors.
