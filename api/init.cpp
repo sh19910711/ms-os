@@ -6,6 +6,7 @@ channel_t channel_server = 0;
 class _GPIO GPIO;
 class _Timer Timer;
 class _Logging Logging;
+class _HTTP HTTP;
 
 extern "C" void csapp_startup(void) {
 
@@ -13,6 +14,7 @@ extern "C" void csapp_startup(void) {
     Logging = _Logging();
     GPIO  = _GPIO();
     Timer = _Timer();
+    HTTP = _HTTP();
 
     init_drivers();
     setup();
