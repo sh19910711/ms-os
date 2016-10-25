@@ -25,3 +25,19 @@ if (ENV.get("id" &id)) {
     /* NOTREACHED */
 }
 ```
+
+
+### get_device_secret ###
+```api:c++
+const char *Device::get_device_secret();
+```
+
+Returns the device's device_secret.
+
+
+### get_server_url ###
+```api:c++
+const char *Device::get_server_url();
+```
+
+Returns the mgmt server URL.
