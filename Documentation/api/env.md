@@ -15,7 +15,7 @@ Retrieving Environment Variable
 ### get ###
 ```api:c++
 int ENV::get(const char *name, int *value);
-int ENV::get(const char *name, char *value);
+int ENV::get(const char *name, char *value, size_t value_size);
 ```
 
 Fills the environment variable `name` to `value`.

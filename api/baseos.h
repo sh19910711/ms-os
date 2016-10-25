@@ -2,6 +2,7 @@
 #define __BASEOS_H__
 
 #include <resea.h>
+#include <string.h>
 #include <string>
 
 #include "GPIO.h"
@@ -9,6 +10,7 @@
 #include "Device.h"
 #include "Logging.h"
 #include "HTTP.h"
+#include "ENV.h"
 
 // interfaces
 #define DRIVER_GPIO  1

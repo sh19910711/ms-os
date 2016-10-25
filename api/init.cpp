@@ -1,4 +1,5 @@
 #include <resea.h>
+#include <string.h>
 #include "app.h"
 #include "loop.h"
 
@@ -7,6 +8,7 @@ class _GPIO GPIO;
 class _Timer Timer;
 class _Logging Logging;
 class _HTTP HTTP;
+class _ENV ENV;
 class _Device Device;
 
 extern "C" void csapp_startup(void) {
@@ -17,6 +19,7 @@ extern "C" void csapp_startup(void) {
     GPIO  = _GPIO();
     Timer = _Timer();
     HTTP = _HTTP();
+    ENV = _ENV();
 
     init_drivers();
     setup();
