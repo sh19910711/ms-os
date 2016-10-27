@@ -13,9 +13,11 @@ int _HTTP::request(const char *method, string url,
 #ifdef ARCH_ESP8266
     // TODO: support TLS
     int port;
+    bool tls;
     const char *rest;
     if (url.startswith("http://")) {
         port = 80;
+        tls = false;
         rest = url.c_str() + 7;
     } else {
         Logging.errorln("HTTP: unsupported scheme");
@@ -46,10 +48,11 @@ int _HTTP::request(const char *method, string url,
 
     finfo->http_request(host.c_str(), port, method, path.c_str(),
                         headers.c_str(), payload, payload_size,
-                        resp, resp_size);
+                        resp, resp_size, tls);
 
     // TODO: get response headers
     // TODO: return http status code
+    return 200; // XXX
 #endif
 }
 
