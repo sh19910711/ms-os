@@ -50,3 +50,11 @@ const char *Device::get_server_url();
 ```
 
 Returns the mgmt server URL.
+
+
+### get_deployment_id_on_boot ###
+```api:c++
+unsigned long Device::get_deployment_id_on_boot();
+```
+
+Returns the deployment id on boot.

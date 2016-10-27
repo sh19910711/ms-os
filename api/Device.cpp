@@ -33,6 +33,13 @@ const char *_Device::get_server_url() {
 }
 
 
+unsigned long _Device::get_deployment_id_on_boot() {
+
+// XXX
+#ifdef ARCH_ESP8266
+    return finfo->get_deployment_id_on_boot();
+#endif
+}
 
 
 NORETURN void _Device::update(unsigned long deployment_id) {
