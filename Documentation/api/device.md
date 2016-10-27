@@ -49,7 +49,7 @@ Returns the device's device_secret.
 const char *Device::get_server_url();
 ```
 
-Returns the mgmt server URL.
+Returns the codestand server URL.
 
 
 ### get_deployment_id_on_boot ###
