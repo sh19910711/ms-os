@@ -27,6 +27,15 @@ if (ENV.get("id" &id)) {
 ```
 
 
+### update ###
+```api:c++
+NORETURN void Device::update(unsigned long deployment_id);
+```
+
+Downloads and launches app to the speicified `deployment_id`. The
+current running app will be killed.
+
+
 ### get_device_secret ###
 ```api:c++
 const char *Device::get_device_secret();

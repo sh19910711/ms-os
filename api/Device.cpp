@@ -33,6 +33,17 @@ const char *_Device::get_server_url() {
 }
 
 
+
+
+NORETURN void _Device::update(unsigned long deployment_id) {
+
+// XXX
+#ifdef ARCH_ESP8266
+    finfo->update(deployment_id);
+#endif
+}
+
+
 NORETURN void _Device::reset(const char *errmsg) {
 
     Logging.errorln(errmsg);
