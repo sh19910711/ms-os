@@ -1,0 +1,19 @@
+api: 1
+name: slack-button
+lang: c++
+
+sources:
+  - main.cpp
+
+config:
+  POLLING_INTERVAL:
+    desc: The interval of polling a GPIO pin (in msec)
+    type: int
+    default: 10000
+  SLACK_URL:
+    desc: The Slack webhook URL
+    type: string
+  BUTTON_GPIO_PIN:
+    desc: The digital GPIO pin to be polled
+    type: int
+    default: 4
