@@ -7,8 +7,11 @@ language: c++
 sudo: required
 
 services:
-- docker
+  - docker
+
+install:
+  - docker pull codestand/baseos
 
 script:
-- cp ci/led-blink.config.yaml examples/led-blink/.config.yaml
-- docker run -v $PWD/examples/led-blink:/app -t codestand/baseos
+  - cp ci/led-blink.config.yaml examples/led-blink/.config.yaml
+  - docker run -v $PWD/examples/led-blink:/app -t codestand/baseos
