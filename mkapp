@@ -1,0 +1,172 @@
+#!/usr/bin/env python3
+#
+#
+#    Codestand app to Resea app Converter
+#
+#
+
+import argparse
+import glob
+import os
+import shutil
+import jinja2
+import yaml
+
+
+APP_H_TEMPLATE = """\
+#ifndef __BASEOS_APP_H__
+#define __BASEOS_APP_H__
+
+#include "../baseos.h"
+
+{% for name, config in consts.items() %}
+#define CONFIG_{{ name }} ({{ config['cpp_value'] }})
+{% endfor %}
+
+{% for name, driver in drivers.items() %}
+struct {{ name }}_args {
+    int interface;
+    int gpio_pin;
+};
+
+#include "../{{ driver['cpp_class_name'] }}.h"
+{% endfor %}
+
+{% for name, config in parts.items() %}
+extern class {{ config['driver_class_name'] }} {{ name }};
+{% endfor %}
+
+void init_drivers();
+extern void setup();
+
+#endif
+"""
+
+DRIVERS_CPP_TEMPLATE = """\
+#include <app.h>
+
+{% for name, config in parts.items() %}
+class {{ config['driver_class_name'] }} {{ name }};
+{% endfor %}
+
+void init_drivers() {
+
+{% for name, config in parts.items() %}
+    struct {{ config['driver'] }}_args {{ name }}_args = { {{ config['cpp_args'] | join(', ') }} };
+    {{ name }} = {{ config['driver_class_name'] }}(&{{ name }}_args);
+{% endfor %}
+}
+"""
+
+APP_YAML_TEMPLATE = """\
+name: {{ yaml['name'] }}
+objs: [ {{ objs | join(',') }} ]
+requires:
+  - channel
+  - gpio
+implements: []
+"""
+
+
+def load_yaml(path):
+    return yaml.safe_load(open(path))
+
+
+def generate_file(path, tmpl, args):
+    with open(path, 'w') as f:
+        f.write(jinja2.Template(tmpl).render(args))
+
+
+class ValidationError(Exception):
+    pass
+
+def validate_application_yaml(yaml):
+    if yaml['api'] != 1:
+      raise ValidationError('unsupported API version (expected 1)')
+
+    if yaml['lang'] != 'c++':
+      raise ValidationError('unsupported language (expected c++)')
+
+
+def validate_config_yaml(config):
+    if not 'BOARD' in config:
+      raise ValidationError('BOARD is not set')
+
+    if config['BOARD']['value'] != 'esp8266':
+      raise ValidationError('unsupported board (only esp8266 is supported)')
+
+
+def convert_to_cpp_literal(type_, value):
+    if type_ == 'string':
+        return '"{}"'.format(value)
+    else:
+        return value
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('app_path')
+    parser.add_argument('build_dir')
+    args = parser.parse_args()
+
+    app_path = os.path.abspath(args.app_path)
+    build_dir = args.build_dir
+
+    yaml = load_yaml(os.path.join(app_path, 'application.yaml'))
+    config = load_yaml(os.path.join(app_path, '.config.yaml'))
+
+    validate_application_yaml(yaml)
+    validate_config_yaml(config)
+
+    parts  = {k: v for k,v in config.items() if v['type'] == 'driver'}
+    consts  = {k: v for k,v in config.items() if v['type'] != 'driver'}
+    for k,v in consts.items():
+      consts[k]['cpp_value'] = convert_to_cpp_literal(v['type'], v['value'])
+
+    sources = glob.glob('api/*') + [os.path.join(build_dir, 'drivers.cpp')] + \
+              list(map(lambda f: os.path.join(app_path, f), yaml['sources']))
+
+    drivers = {}
+    for part in parts.values():
+        driver_name = part['driver']
+
+        args = {}
+        for k, v in part.items():
+            if k == 'interface':
+                args['interface'] = 'DRIVER_' + v.upper()
+            if k == 'gpio':
+                args['gpio_pin'] = v['pin']
+
+        part['cpp_args'] = [ '.{}={}'.format(k, v) for k,v in args.items() ]
+
+        if driver_name not in drivers:
+            driver_yaml = load_yaml(os.path.join('drivers', driver_name, 'driver.yaml'))
+            drivers[driver_name] = driver_yaml
+            sources += list(map(lambda f: os.path.join('drivers', driver_name, f),
+                                driver_yaml['sources']))
+
+        part['driver_class_name'] = drivers[driver_name].get('cpp_class_name',
+                                                             driver_name)
+
+    os.makedirs(build_dir, exist_ok=True)
+    os.makedirs(os.path.join(build_dir, 'include'), exist_ok=True)
+
+    objs = []
+    for source in sources:
+        basename, ext = os.path.splitext(source)
+        if ext == '.cpp':
+            objs.append(os.path.basename(basename) + '.o')
+
+        if not source.startswith(build_dir):
+            shutil.copyfile(source, os.path.join(build_dir,
+                                                 os.path.basename(source)))
+
+    generate_file(os.path.join(build_dir, 'include', 'app.h'),
+                  APP_H_TEMPLATE, locals())
+    generate_file(os.path.join(build_dir, 'drivers.cpp'),
+                  DRIVERS_CPP_TEMPLATE, locals())
+    generate_file(os.path.join(build_dir, 'include', 'app.yaml'),
+                  APP_YAML_TEMPLATE, locals())
+
+if __name__ == "__main__":
+    main()
