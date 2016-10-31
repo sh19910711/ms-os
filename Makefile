@@ -1,3 +1,5 @@
+$(VERBOSE).SILENT:
+
 ifeq ($(APP_DIR),)
     $(error "APP_DIR is not set")
 endif
