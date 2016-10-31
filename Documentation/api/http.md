@@ -23,11 +23,12 @@ If `resp` is set, the response body is stored in `resp`. Other arguments are:
 __Example:__ Create a new folder in a WebDAV.
 ```example:c++
 int status;
+char resp[128];
 
 status = HTTP.request("MKCOL",
                       "https://example.com/webdav/chandler/NewFolder",
-                      nullptr,
-                      "");
+                      nullptr, 0,
+                      "", resp, &resp);
 
 if (status != 201)
     Logging.printlnf("server returned %d", status);
@@ -66,9 +67,9 @@ int status;
 auto resp = new char[512];
 
 status = HTTP.post("https://hooks.slack.com/services/XXX/YYY/ZZZ",
-                   "payload={\"text\": \"Hello!\"}",
+                   "payload={\"text\": \"Hello!\"}", 26,
                    "Content-Type: application/x-www-form-urlencoded",
-                   &resp);
+                   &resp, 512);
 
 if (String(resp) != "ok")
     Logging.errorlnf("Slack says: %s", status, resp);
