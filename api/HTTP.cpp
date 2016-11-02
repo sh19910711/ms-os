@@ -32,6 +32,7 @@ int _HTTP::request(const char *method, string url,
 
     if (*rest == ':') {
         string s;
+        rest++; // skip ':'
         while (*rest && *rest != '/') {
             s += *rest;
             rest++;
