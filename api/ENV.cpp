@@ -8,6 +8,7 @@ _ENV::_ENV() {
     url += Device.get_server_url();
     url += "/api/devices/";
     url += Device.get_device_secret();
+    url += "/envvars";
 
     if (HTTP.GET(url, "", vars.buffer(), vars.capacity()) != 200) {
         Logging.errorln("failed to download envvars");
