@@ -165,7 +165,7 @@ def main():
                   APP_H_TEMPLATE, locals())
     generate_file(os.path.join(build_dir, 'drivers.cpp'),
                   DRIVERS_CPP_TEMPLATE, locals())
-    generate_file(os.path.join(build_dir, 'include', 'app.yaml'),
+    generate_file(os.path.join(build_dir, 'app.yaml'),
                   APP_YAML_TEMPLATE, locals())
 
 if __name__ == "__main__":
