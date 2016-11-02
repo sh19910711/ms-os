@@ -34,6 +34,14 @@ def main():
     parser.add_argument("tty")
     args = parser.parse_args()
 
+    try:
+        for _ in range(0, 5):
+            if not os.path.exists(args.tty):
+                print("console.py: {} not found. Trying after few seconds...".format(args.tty))
+                time.sleep(5)
+    except KeyboardInterrupt:
+       sys.exit()
+
     print("*** opening", args.tty)
     serial_port = serial.Serial(args.tty, 115200, timeout=1)
     print("*** listening", args.tty)
