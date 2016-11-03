@@ -1,9 +1,9 @@
 BaseOS
 ======
-[![Build Status](https://travis-ci.org/codestand/baseos.svg?branch=master)](https://travis-ci.org/codestand/baseos)
-[![Docker Automated build](https://img.shields.io/docker/automated/codestand/baseos.svg)](https://hub.docker.com/r/codestand/baseos/)
+[![Build Status](https://travis-ci.org/makestack/baseos.svg?branch=master)](https://travis-ci.org/makestack/baseos)
+[![Docker Automated build](https://img.shields.io/docker/automated/makestack/baseos.svg)](https://hub.docker.com/r/makestack/baseos/)
 
-The APIs and build system for Codestand applications.
+The APIs and build system for MakeStack applications.
 
 
 License

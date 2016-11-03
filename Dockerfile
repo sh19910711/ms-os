@@ -1,5 +1,5 @@
-# docker build -t codestand/baseos .
-# docker run -v $PWD/examples/led-blink:/app -t codestand/baseos
+# docker build -t makestack/baseos .
+# docker run -v $PWD/examples/led-blink:/app -t makestack/baseos
 FROM ubuntu:16.04
 MAINTAINER Seiya Nuta <nuta@seiya.me>
 
