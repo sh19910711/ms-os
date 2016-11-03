@@ -1,5 +1,5 @@
 #include <resea.h>
-#include "baseos.h"
+#include "deviceos.h"
 #include "Timer.h"
 
 #include "arch/esp8266/finfo.h" // TODO

@@ -1,5 +1,5 @@
-#ifndef __BASEOS_LOGGING_H__
-#define __BASEOS_LOGGING_H__
+#ifndef __DEVICEOS_LOGGING_H__
+#define __DEVICEOS_LOGGING_H__
 
 #include <resea.h>
 

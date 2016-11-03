@@ -1,5 +1,5 @@
-#ifndef __BASEOS_H__
-#define __BASEOS_H__
+#ifndef __DEVICEOS_H__
+#define __DEVICEOS_H__
 
 #include <resea.h>
 #include <string.h>

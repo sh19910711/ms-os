@@ -14,10 +14,10 @@ import yaml
 
 
 APP_H_TEMPLATE = """\
-#ifndef __BASEOS_APP_H__
-#define __BASEOS_APP_H__
+#ifndef __DEVICEOS_APP_H__
+#define __DEVICEOS_APP_H__
 
-#include "../baseos.h"
+#include "../deviceos.h"
 
 {% for name, config in consts.items() %}
 #define CONFIG_{{ name }} ({{ config['cpp_value'] }})
