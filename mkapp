@@ -52,7 +52,16 @@ class {{ config['driver_class_name'] }} {{ name }};
 void init_drivers() {
 
 {% for name, config in parts.items() %}
-    struct {{ config['driver'] }}_args {{ name }}_args = { {{ config['cpp_args'] | join(', ') }} };
+    struct {{ config['driver'] }}_args {{ name }}_args;
+{% endfor %}
+
+{% for name, config in parts.items() %}
+{% for k, v in config['args'].items() %}
+    {{ name }}_args.{{ k }} = {{ v }};
+{% endfor %}
+{% endfor %}
+
+{% for name, config in parts.items() %}
     {{ name }} = {{ config['driver_class_name'] }}(&{{ name }}_args);
 {% endfor %}
 }
@@ -130,14 +139,12 @@ def main():
     for part in parts.values():
         driver_name = part['driver']
 
-        args = {}
+        part['args'] = {}
         for k, v in part.items():
             if k == 'interface':
-                args['interface'] = 'DRIVER_' + v.upper()
+                part['args']['interface'] = 'DRIVER_' + v.upper()
             if k == 'gpio':
-                args['gpio_pin'] = v['pin']
-
-        part['cpp_args'] = [ '.{}={}'.format(k, v) for k,v in args.items() ]
+                part['args']['gpio_pin'] = v['pin']
 
         if driver_name not in drivers:
             driver_yaml = load_yaml(os.path.join('drivers', driver_name, 'driver.yaml'))
