@@ -19,6 +19,10 @@ int _HTTP::request(const char *method, string url,
         port = 80;
         tls = false;
         rest = url.c_str() + 7;
+    } else if (url.startswith("https://")) {
+        port = 443;
+        tls  = true;
+        rest = url.c_str() + 8;
     } else {
         Logging.errorln("HTTP: unsupported scheme");
         return 0;
