@@ -51,6 +51,9 @@ int _HTTP::request(const char *method, string url,
         rest++;
     }
 
+    if (path.length() == 0)
+        path += '/';
+
     finfo->http_request(host.c_str(), port, method, path.c_str(),
                         headers.c_str(), payload, payload_size,
                         resp, resp_size, tls);
