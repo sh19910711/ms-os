@@ -2,7 +2,7 @@
 
 
 void post(int state) {
-    auto resp = new char[512];
+    char resp[128];
     string payload;
     payload += "{";
     payload += "\"id\": \"1\",";
