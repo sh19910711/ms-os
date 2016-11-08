@@ -9,7 +9,7 @@ void send_heartbeat() {
     url += Device.get_server_url();
     url += "/api/devices/";
     url += Device.get_device_secret();
-    url += "/hearbeat?status=running";
+    url += "/heartbeat?status=running";
 
     char resp[64];
     int status;
