@@ -29,7 +29,9 @@ void send_heartbeat() {
 
     unsigned long new_deployment_id = atol((const char *) &resp);
     if (new_deployment_id > deployment_id) {
-         Device.update(deployment_id);
+        Logging.printlnf("new deployment detected, updating.... (%d -> %d)",
+                         deployment_id, new_deployment_id);
+        Device.update(deployment_id);
     }
 }
 
