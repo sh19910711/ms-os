@@ -36,5 +36,6 @@ void send_heartbeat() {
 
 void set_deployment_id() {
 
-    deployment_id = Device.get_deployment_id_on_boot();
+    if (deployment_id == 0)
+        deployment_id = Device.get_deployment_id_on_boot();
 }
