@@ -31,7 +31,7 @@ void send_heartbeat() {
     if (new_deployment_id > deployment_id) {
         Logging.printlnf("new deployment detected, updating.... (%d -> %d)",
                          deployment_id, new_deployment_id);
-        Device.update(deployment_id);
+        Device.update(new_deployment_id);
     }
 }
 
