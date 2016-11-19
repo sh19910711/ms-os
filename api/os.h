@@ -1,5 +1,5 @@
-#ifndef __DEVICEOS_H__
-#define __DEVICEOS_H__
+#ifndef __MAKESTACKOS_H__
+#define __MAKESTACKOS_H__
 
 #include <resea.h>
 #include <string.h>

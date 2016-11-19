@@ -1,7 +1,7 @@
 #include <resea.h>
 #include <resea/channel.h>
 #include <resea/gpio.h>
-#include "deviceos.h"
+#include "os.h"
 #include "GPIO.h"
 
 
