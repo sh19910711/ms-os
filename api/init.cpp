@@ -30,7 +30,6 @@ extern "C" void csapp_startup(void) {
         send_heartbeat();
     });
 
-    init_drivers();
     setup();
     start_loop();
 }

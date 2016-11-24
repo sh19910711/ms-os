@@ -18,14 +18,16 @@ void post(int state) {
 }
 
 
-void setup() {
-    static int state = GPIO_LOW;
+int state;
 
-    GPIO.set_pin_mode(CONFIG_BUTTON_GPIO_PIN, GPIO_INPUT_PIN);
+void setup() {
+    state = GPIO_LOW;
+
+    GPIO.set_pin_mode(BUTTON_GPIO_PIN, GPIO_INPUT_PIN);
     post(0);
 
-    Timer.set_interval(CONFIG_POLLING_INTERVAL, []() {
-        int new_state = GPIO.read(CONFIG_BUTTON_GPIO_PIN);
+    Timer.set_interval(POLLING_INTERVAL, []() {
+        int new_state = GPIO.read(BUTTON_GPIO_PIN);
         if (new_state != state) {
             post(new_state);
             state = new_state;

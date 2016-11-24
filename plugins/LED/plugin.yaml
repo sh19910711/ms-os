@@ -1,8 +1,6 @@
 api: 1
-name: led
+name: LED
 lang: c++
-
-cpp_class_name: LED
 
 sources:
   - LED.cpp

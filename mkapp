@@ -19,52 +19,17 @@ APP_H_TEMPLATE = """\
 
 #include "../os.h"
 
-{% for name, config in consts.items() %}
-#define CONFIG_{{ name }} ({{ config['cpp_value'] }})
+{% for name, config in config.items() %}
+#define {{ name }} ({{ config['cpp_value'] }})
 {% endfor %}
 
-{% for name, driver in drivers.items() %}
-struct {{ name }}_args {
-    int interface;
-    int gpio_pin;
-};
-
-#include "../{{ driver['cpp_class_name'] }}.h"
+{% for plugin in plugins %}
+#include "../{{ plugin['name'] }}.h"
 {% endfor %}
 
-{% for name, config in parts.items() %}
-extern class {{ config['driver_class_name'] }} {{ name }};
-{% endfor %}
-
-void init_drivers();
 extern void setup();
 
 #endif
-"""
-
-DRIVERS_CPP_TEMPLATE = """\
-#include <app.h>
-
-{% for name, config in parts.items() %}
-class {{ config['driver_class_name'] }} {{ name }};
-{% endfor %}
-
-void init_drivers() {
-
-{% for name, config in parts.items() %}
-    struct {{ config['driver'] }}_args {{ name }}_args;
-{% endfor %}
-
-{% for name, config in parts.items() %}
-{% for k, v in config['args'].items() %}
-    {{ name }}_args.{{ k }} = {{ v }};
-{% endfor %}
-{% endfor %}
-
-{% for name, config in parts.items() %}
-    {{ name }} = {{ config['driver_class_name'] }}(&{{ name }}_args);
-{% endfor %}
-}
 """
 
 APP_YAML_TEMPLATE = """\
@@ -127,33 +92,17 @@ def main():
     validate_application_yaml(yaml)
     validate_config_yaml(config)
 
-    parts  = {k: v for k,v in config.items() if v['type'] == 'driver'}
-    consts  = {k: v for k,v in config.items() if v['type'] != 'driver'}
-    for k,v in consts.items():
-      consts[k]['cpp_value'] = convert_to_cpp_literal(v['type'], v['value'])
+    for k,v in config.items():
+      config[k]['cpp_value'] = convert_to_cpp_literal(v['type'], v['value'])
 
-    sources = glob.glob('api/*') + [os.path.join(build_dir, 'drivers.cpp')] + \
-              list(map(lambda f: os.path.join(app_path, f), yaml['sources']))
+    sources = glob.glob('api/*') +list(map(lambda f: os.path.join(app_path, f), yaml['sources']))
 
-    drivers = {}
-    for part in parts.values():
-        driver_name = part['driver']
-
-        part['args'] = {}
-        for k, v in part.items():
-            if k == 'interface':
-                part['args']['interface'] = 'DRIVER_' + v.upper()
-            if k == 'gpio':
-                part['args']['gpio_pin'] = v['pin']
-
-        if driver_name not in drivers:
-            driver_yaml = load_yaml(os.path.join('drivers', driver_name, 'driver.yaml'))
-            drivers[driver_name] = driver_yaml
-            sources += list(map(lambda f: os.path.join('drivers', driver_name, f),
-                                driver_yaml['sources']))
-
-        part['driver_class_name'] = drivers[driver_name].get('cpp_class_name',
-                                                             driver_name)
+    plugins = []
+    for plugin_name in yaml.get("plugins"):
+        plugin_yaml = load_yaml(os.path.join('plugins', plugin_name, 'plugin.yaml'))
+        sources += list(map(lambda f: os.path.join('plugins', plugin_name, f),
+                            plugin_yaml['sources']))
+        plugins.append(plugin_yaml)
 
     os.makedirs(build_dir, exist_ok=True)
     os.makedirs(os.path.join(build_dir, 'include'), exist_ok=True)
@@ -170,8 +119,6 @@ def main():
 
     generate_file(os.path.join(build_dir, 'include', 'app.h'),
                   APP_H_TEMPLATE, locals())
-    generate_file(os.path.join(build_dir, 'drivers.cpp'),
-                  DRIVERS_CPP_TEMPLATE, locals())
     generate_file(os.path.join(build_dir, 'app.yaml'),
                   APP_YAML_TEMPLATE, locals())
 

@@ -6,7 +6,7 @@ class LED {
 
 public:
     LED() = default;
-    LED(struct led_args *args);
+    LED(int gpio_pin);
     void on();
     void off();
 };

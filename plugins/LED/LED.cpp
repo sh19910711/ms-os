@@ -1,7 +1,7 @@
 #include <app.h>
 
-LED::LED(struct led_args *args) {
-    pin = args->gpio_pin;
+LED::LED(int gpio_pin) {
+    pin = gpio_pin;
     GPIO.set_pin_mode(pin, GPIO_OUTPUT_PIN);
 }
 
