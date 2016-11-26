@@ -12,9 +12,10 @@ config:
     desc: The interval of polling a GPIO pin (in msec)
     type: int
     default: 1000
-  SLACK_URL:
-    desc: The Slack webhook URL
+  HTTP_BUTTON_SERVER_URL:
+    desc: The http-button server URL
     type: string
+    default: "http://http-button.herokuapp.com/"
   BUTTON_GPIO_PIN:
     desc: The digital GPIO pin to be polled
     type: int
