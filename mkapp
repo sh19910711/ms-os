@@ -9,6 +9,8 @@ import argparse
 import glob
 import os
 import shutil
+import subprocess
+import sys
 import jinja2
 import yaml
 
@@ -77,6 +79,23 @@ def convert_to_cpp_literal(type_, value):
         return value
 
 
+def download_plugin(name):
+
+    plugin_dir = os.path.join('plugins', name)
+    if os.path.exists(plugin_dir):
+        # already downloaded
+        return
+
+    parent_dir = os.path.join('plugins', os.path.dirname(name))
+    os.makedirs(parent_dir, exist_ok=True)
+
+    print("Downloading {}...".format(name))
+
+    p = subprocess.run(['git', 'clone', 'https://github.com/' + name, plugin_dir],
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    if p.returncode != 0:
+        sys.exit("Plugin download error: {}".format(p.stdout.decode('utf-8').strip()))
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('app_path')
@@ -99,6 +118,9 @@ def main():
 
     plugins = []
     for plugin_name in yaml.get("plugins"):
+        if '/' in plugin_name:
+            download_plugin(plugin_name)
+
         plugin_yaml = load_yaml(os.path.join('plugins', plugin_name, 'plugin.yaml'))
         sources += list(map(lambda f: os.path.join('plugins', plugin_name, f),
                             plugin_yaml['sources']))
