@@ -10,7 +10,7 @@ services:
   - docker
 
 install:
-  - docker pull makestack/os
+  - docker build -t makestack/os .
 
 script:
   - cp ci/led-blink.config.yaml examples/led-blink/.config.yaml
