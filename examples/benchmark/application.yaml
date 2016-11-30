@@ -1,0 +1,30 @@
+api: 1
+name: benchmark
+lang: c++
+
+plugins: []
+
+sources:
+  - main.cpp
+
+config:
+  POLLING_INTERVAL:
+    desc: The interval of polling a GPIO pin (in msec)
+    type: int
+    default: 1000
+  HTTP_SERVER_URL:
+    desc: The http-button server URL
+    type: string
+    default: "http://http-button.herokuapp.com/"
+  BUTTON_PIN:
+    desc: The digital GPIO pin to be polled
+    type: int
+    default: 4
+  BLINK_LED_PIN:
+    desc: The digital GPIO pin to be polled
+    type: int
+    default: 4
+  INTERRUPT_LED_PIN:
+    desc: The digital GPIO pin to be polled
+    type: int
+    default: 4
