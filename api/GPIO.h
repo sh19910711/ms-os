@@ -8,7 +8,7 @@
 // are defined in resea/gpio.h
 
 class _GPIO {
-    channel_t gpio_server;
+    channel_t gpio_server, interrupt_server;
   public:
     _GPIO();
     void set_pin_mode(int pin, int mode);
@@ -17,6 +17,7 @@ class _GPIO {
     int read_analog(int pin);
     bool is_on(int pin);
     void toggle(int pin);
+    void on_change(int pin, void (*callback)());
 };
 
 #endif

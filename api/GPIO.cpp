@@ -1,6 +1,7 @@
 #include <resea.h>
 #include <resea/channel.h>
 #include <resea/gpio.h>
+#include <resea/interrupt.h>
 #include "os.h"
 #include "GPIO.h"
 
@@ -8,10 +9,12 @@
 _GPIO::_GPIO() {
 
     gpio_server = open();
+    interrupt_server = open();
     // TODO: check retrun values
 
     result_t r;
     call_channel_connect(channel_server, gpio_server, GPIO_INTERFACE, &r);
+    call_channel_connect(channel_server, interrupt_server, INTERRUPT_INTERFACE, &r);
 }
 
 
@@ -52,4 +55,10 @@ bool _GPIO::is_on(int pin) {
 void _GPIO::toggle(int pin) {
 
     write(pin, !is_on(pin));
+}
+
+
+void _GPIO::on_change(int pin, void (*callback)()) {
+    result_t r;
+    call_interrupt_listen(interrupt_server, app_channel, pin, (uintmax_t) callback, &r);
 }
