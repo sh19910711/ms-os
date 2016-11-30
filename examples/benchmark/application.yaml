@@ -2,13 +2,14 @@ api: 1
 name: benchmark
 lang: c++
 
-plugins: []
+plugins:
+  - LED
 
 sources:
   - main.cpp
 
 config:
-  POLLING_INTERVAL:
+  BLINK_INTERVAL:
     desc: The interval of polling a GPIO pin (in msec)
     type: int
     default: 1000
@@ -23,8 +24,8 @@ config:
   BLINK_LED_PIN:
     desc: The digital GPIO pin to be polled
     type: int
-    default: 4
-  INTERRUPT_LED_PIN:
+    default: 0
+  INTR_LED_PIN:
     desc: The digital GPIO pin to be polled
     type: int
-    default: 4
+    default: 13

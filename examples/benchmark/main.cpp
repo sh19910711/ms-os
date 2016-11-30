@@ -1,18 +1,16 @@
 #include <app.h>
 
-int i;
-LED MainLED;
+LED BlinkLED, IntrLED;
 
 void setup() {
-    i = 0;
-    MainLED = LED(LED_PIN);
+    BlinkLED = LED(BLINK_LED_PIN);
+    IntrLED  = LED(INTR_LED_PIN);
 
     Timer.set_interval(BLINK_INTERVAL, []() {
-        if (i % 2 == 0)
-            MainLED.on();
-        else
-            MainLED.off();
+        BlinkLED.toggle();
+    });
 
-        i++;
+    GPIO.on_change(BUTTON_PIN, []() {
+        IntrLED.toggle();
     });
 }
