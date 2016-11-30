@@ -31,7 +31,7 @@ static void mainloop() {
 }
 
 
-extern "C" void csapp_startup(void) {
+extern "C" void app_startup(void) {
 
     app_channel    = open();
     channel_server = connect_to_local(1);
