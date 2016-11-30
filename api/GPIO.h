@@ -16,6 +16,7 @@ class _GPIO {
     int read(int pin);
     int read_analog(int pin);
     bool is_on(int pin);
+    void toggle(int pin);
 };
 
 #endif

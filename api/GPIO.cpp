@@ -45,5 +45,11 @@ void _GPIO::write(int pin, int value) {
 
 bool _GPIO::is_on(int pin) {
 
-    return _GPIO::read(pin) != 0;
+    return read(pin) != 0;
+}
+
+
+void _GPIO::toggle(int pin) {
+
+    write(pin, !is_on(pin));
 }
