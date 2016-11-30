@@ -2,7 +2,6 @@
 #include <resea/interrupt.h>
 #include <string.h>
 #include "app.h"
-#include "loop.h"
 #include "heartbeat.h"
 
 
