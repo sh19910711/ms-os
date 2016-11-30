@@ -12,3 +12,7 @@ void LED::on() {
 void LED::off() {
     GPIO.write(pin, GPIO_LOW);
 }
+
+void LED::toggle() {
+    GPIO.toggle(pin);
+}

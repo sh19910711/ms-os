@@ -9,6 +9,7 @@ public:
     LED(int gpio_pin);
     void on();
     void off();
+    void toggle();
 };
 
 #endif
