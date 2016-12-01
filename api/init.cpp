@@ -1,5 +1,6 @@
 #include <resea.h>
 #include <resea/interrupt.h>
+#include <resea/timer.h>
 #include <string.h>
 #include "app.h"
 #include "heartbeat.h"
@@ -23,7 +24,8 @@ static void mainloop() {
         return;
     }
 
-    if (INTERRUPT_INTERRUPT0 <= buf[1] && buf[1] <= INTERRUPT_INTERRUPT15) {
+    if (TIMER_TIMEOUT == buf[1] ||
+        (INTERRUPT_INTERRUPT0 <= buf[1] && buf[1] <= INTERRUPT_INTERRUPT15)) {
         void (*callback)() = (void (*)()) buf[2];
         callback();
     }

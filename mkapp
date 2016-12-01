@@ -41,6 +41,7 @@ requires:
   - channel
   - gpio
   - interrupt
+  - timer
 implements: []
 """
 
