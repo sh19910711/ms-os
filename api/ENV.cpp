@@ -1,25 +1,22 @@
+#include <malloc.h>
 #include <app.h>
 
 
 _ENV::_ENV() {
-    vars.reserve(ENV_BUFFER_SIZE);
-
-    // TODO: use memset
-    char *p = vars.buffer();
-    for (size_t i = 0; i < vars.capacity(); i++, p++)
-        *p = 0;
-
     string url;
     url += Device.get_server_url();
     url += "/api/devices/";
     url += Device.get_device_secret();
     url += "/envvars";
 
-    if (HTTP.GET(url, "", vars.buffer(), vars.capacity()) != 200) {
+    uint8_t *buffer;
+    size_t size;
+    if (HTTP.GET(url, "", (void **) &buffer, &size) != 200) {
         Logging.errorln("failed to download envvars");
     }
 
-    vars._length = strlen(vars.buffer()); // FIXME
+    vars.append((const char *) buffer, size);
+    free(buffer);
 }
 
 

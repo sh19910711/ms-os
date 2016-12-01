@@ -4,16 +4,18 @@
 #include <resea.h>
 
 class _HTTP {
-  public:
-    int request(const char *method, string url,
+    channel_t http_server;
+    int request(int options, string url,
                 const void *payload, size_t payload_size, string headers,
-                void *resp, size_t resp_size);
-    int GET(string url, string headers, void *resp, size_t resp_size);
+                void **resp, size_t *resp_size);
+  public:
+    _HTTP();
+    int GET(string url, string headers, void **resp = nullptr, size_t *resp_size = 0);
     int POST(string url, const void *payload, size_t payload_size, string headers,
-             void *resp, size_t resp_size);
+             void **resp = nullptr, size_t *resp_size = 0);
     int PUT(string url, const void *payload, size_t payload_size, string headers,
-            void *resp, size_t resp_size);
-    int DELETE(string url, string headers, void *resp, size_t resp_size);
+            void **resp = nullptr, size_t *resp_size = 0);
+    int DELETE(string url, string headers, void **resp = nullptr, size_t *resp_size = 0);
 };
 
 #endif

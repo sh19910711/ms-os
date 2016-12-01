@@ -1,4 +1,5 @@
-#include "app.h"
+#include <malloc.h>
+#include <app.h>
 #include "heartbeat.h"
 
 
@@ -11,18 +12,23 @@ void send_heartbeat() {
     url += Device.get_device_secret();
     url += "/heartbeat?status=running";
 
-    char resp[64];
+    char *resp;
+    size_t resp_size;
     int status;
     char *buffer;
-    size_t buffer_size = get_buffered_log(&buffer);
-    status = HTTP.PUT(url, buffer, buffer_size, "", resp, sizeof(resp));
+    size_t buffer_size;
+
+    buffer_size = get_buffered_log(&buffer);
+    status = HTTP.PUT(url, buffer, buffer_size, "", (void **) &resp, &resp_size);
 
     if (status != 200) {
+        free(buffer);
         Logging.errorlnf("heartbeat error: server returned %d", status);
         return;
     }
 
     if (resp[0] == 'X') {
+        free(buffer);
         Logging.errorlnf("heartbeat error: no deployment");
         return;
     }

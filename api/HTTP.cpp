@@ -1,91 +1,57 @@
+#include <resea/channel.h>
+#include <resea/http.h>
 #include <app.h>
 
-// XXX
-#ifdef ARCH_ESP8266
-#include "arch/esp8266/finfo.h"
-#endif
 
+_HTTP::_HTTP() {
 
-int _HTTP::request(const char *method, string url,
-                   const void *payload, size_t payload_size, string headers,
-                   void *resp, size_t resp_size) {
+    http_server = open();
+    // TODO: check return values
 
-#ifdef ARCH_ESP8266
-    // TODO: support TLS
-    int port;
-    bool tls;
-    const char *rest;
-    if (url.startswith("http://")) {
-        port = 80;
-        tls = false;
-        rest = url.c_str() + 7;
-    } else if (url.startswith("https://")) {
-        port = 443;
-        tls  = true;
-        rest = url.c_str() + 8;
-    } else {
-        Logging.errorln("HTTP: unsupported scheme");
-        return 0;
-    }
-
-    string host;
-    while (*rest && *rest != ':' && *rest != '/') {
-        host += *rest;
-        rest++;
-    }
-
-    if (*rest == ':') {
-        string s;
-        rest++; // skip ':'
-        while (*rest && *rest != '/') {
-            s += *rest;
-            rest++;
-        }
-
-        port = s.to_int();
-    }
-
-    string path;
-    while (*rest) {
-        path += *rest;
-        rest++;
-    }
-
-    if (path.length() == 0)
-        path += '/';
-
-    finfo->http_request(host.c_str(), port, method, path.c_str(),
-                        headers.c_str(), payload, payload_size,
-                        resp, resp_size, tls);
-
-    // TODO: get response headers
-    // TODO: return http status code
-    return 200; // XXX
-#endif
+    result_t r;
+    call_channel_connect(channel_server, http_server, HTTP_INTERFACE, &r);
 }
 
 
-int _HTTP::GET(string url, string headers, void *resp, size_t resp_size) {
+int _HTTP::request(int options, string url,
+                   const void *payload, size_t payload_size, string headers,
+                   void **resp, size_t *resp_size) {
 
-    return request("GET", url, nullptr, 0, headers, resp, resp_size);
+    if (!resp)
+        options |= HTTP_OPTION_DISCARD_RESPONSE_PAYLOAD;
+
+    int status_code;
+    result_t r;
+    call_http_request(http_server, options, (void *) url.c_str(), url.length(),
+                      (void *) headers.c_str(), headers.length(),
+                      (void *) payload, payload_size,
+                      &r, &status_code, resp, resp_size);
+
+    return status_code;
+}
+
+
+int _HTTP::GET(string url, string headers, void **resp, size_t *resp_size) {
+
+    return request(HTTP_METHOD_GET, url, nullptr, 0, headers, resp, resp_size);
 }
 
 
 int _HTTP::POST(string url, const void *payload, size_t payload_size,
-                string headers, void *resp, size_t resp_size) {
+                string headers, void **resp, size_t *resp_size) {
 
-    return request("POST", url, payload, payload_size, headers, resp, resp_size);
+    return request(HTTP_METHOD_POST, url, payload, payload_size, headers, resp, resp_size);
 }
 
 
 int _HTTP::PUT(string url, const void *payload, size_t payload_size,
-               string headers, void *resp, size_t resp_size) {
+               string headers, void **resp, size_t *resp_size) {
 
-    return request("PUT", url, payload, payload_size, headers, resp, resp_size);
+    return request(HTTP_METHOD_PUT, url, payload, payload_size, headers, resp, resp_size);
 }
 
 
-int _HTTP::DELETE(string url, string headers, void *resp, size_t resp_size) {
+int _HTTP::DELETE(string url, string headers, void **resp, size_t *resp_size) {
 
-    return request("DELETE", url, nullptr, 0, headers, resp, resp_size);
+    return request(HTTP_METHOD_DELETE, url, nullptr, 0, headers, resp, resp_size);
 }
