@@ -1,4 +1,6 @@
-$(VERBOSE).SILENT:
+ifeq ($(APP_DIR),)
+    $(error "APP_DIR is not set")
+endif
 
 APP_NAME  ?= $(notdir $(APP_DIR))
 BUILD_DIR ?= build
@@ -22,3 +24,5 @@ $(APP_DIR)/$(APP_NAME).esp8266.image: $(wildcard api/*) $(APP_DIR)/application.y
 	cd resea && ./genconfig $(CONFIG)
 	cd resea && make -j2
 	cp resea/$(BUILD_DIR)/image $@
+
+$(VERBOSE).SILENT:

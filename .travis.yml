@@ -12,6 +12,9 @@ services:
 install:
   - docker build -t makestack/os .
 
-script:
+before_script:
   - cp ci/led-blink.config.yaml examples/led-blink/.config.yaml
+  - cd examples/led-blink && zip app.zip * .*
+
+script:
   - docker run -v $PWD/examples/led-blink:/app -t makestack/os
