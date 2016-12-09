@@ -11,7 +11,7 @@ CONFIG = ARCH=esp8266 TARGET=kernel APPS="channel-server esp8266-driver app" TAR
 all: $(APP_DIR)/$(APP_NAME).esp8266.image
 
 zipped-app:
-	unzip $(ZIPFILE) -d $(APP_DIR)
+	unzip -n $(ZIPFILE) -d $(APP_DIR)
 	$(MAKE) APP_DIR=$(APP_DIR)
 
 resea:
