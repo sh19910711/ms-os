@@ -50,7 +50,9 @@ extern "C" void app_startup(void) {
         send_heartbeat();
     });
 
+    DEBUG("running setup()");
     setup();
+    DEBUG("entering mainloop");
 
     for (;;) {
         mainloop();
