@@ -15,4 +15,4 @@ ENV PATH=/usr/local/xtensa-lx106-elf/bin:$PATH
 ADD . /os
 WORKDIR /os
 RUN git submodule update --init
-CMD make APP_DIR=/app
+CMD make zipped-app ZIPFILE=/app.zip

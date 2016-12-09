@@ -1,9 +1,5 @@
 $(VERBOSE).SILENT:
 
-ifeq ($(APP_DIR),)
-    $(error "APP_DIR is not set")
-endif
-
 APP_NAME  ?= $(notdir $(APP_DIR))
 BUILD_DIR ?= build
 CONFIG = ARCH=esp8266 TARGET=kernel APPS="channel-server esp8266-driver app" TARGET_FILE=$(BUILD_DIR)/image \
@@ -11,6 +7,12 @@ CONFIG = ARCH=esp8266 TARGET=kernel APPS="channel-server esp8266-driver app" TAR
 
 
 all: $(APP_DIR)/$(APP_NAME).esp8266.image
+
+ZIPPED_APP_DIR = $(dir $(abspath $(ZIPFILE)))app
+zipped-app:
+	mkdir $(ZIPPED_APP_DIR)
+	unzip $(ZIPFILE) -d $(ZIPPED_APP_DIR)
+	$(MAKE) APP_DIR=$(ZIPPED_APP_DIR)
 
 resea:
 	git submodule update --init $@
