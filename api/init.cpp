@@ -34,7 +34,8 @@ static void mainloop() {
 
 extern "C" void app_startup(void) {
 
-    app_channel    = open();
+    app_channel = open();
+
     channel_server = connect_to_local(1);
     Logging = _Logging();
     Device  = _Device();
