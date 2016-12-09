@@ -35,7 +35,7 @@ extern void setup();
 """
 
 APP_YAML_TEMPLATE = """\
-name: {{ yaml['name'] }}
+name: app
 objs: [ {{ objs | join(',') }} ]
 requires:
   - channel
