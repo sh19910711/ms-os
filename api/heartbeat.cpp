@@ -33,7 +33,9 @@ void send_heartbeat() {
         return;
     }
 
-    unsigned long new_deployment_id = atol((const char *) &resp);
+
+    resp[resp_size] = '\0';
+    unsigned int new_deployment_id = atol((const char *) resp);
     if (new_deployment_id > deployment_id) {
         Logging.printlnf("new deployment detected, updating.... (%d -> %d)",
                          deployment_id, new_deployment_id);
