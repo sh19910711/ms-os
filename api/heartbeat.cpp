@@ -39,6 +39,8 @@ void send_heartbeat() {
                          deployment_id, new_deployment_id);
         Device.update(new_deployment_id);
     }
+
+    free(resp);
 }
 
 
