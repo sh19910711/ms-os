@@ -3,7 +3,7 @@
 
 void _Logging::print(const char *s) {
 
-    printfmt("%s", s);
+    printfmt_nonl("%s", s);
 }
 
 
@@ -18,7 +18,7 @@ void _Logging::printf(const char *fmt, ...) {
 
 void _Logging::println(const char *s) {
 
-    printfmt("%s\n", s);
+    printfmt("%s", s);
 }
 
 
@@ -29,7 +29,7 @@ void _Logging::printlnf(const char *fmt, ...) {
     vprintfmt(fmt, vargs);
     va_end(vargs);
 
-    printfmt("\n");
+    printfmt_nonl("\n");
 }
 
 
@@ -42,30 +42,30 @@ void _Logging::error(const char *s) {
 void _Logging::errorf(const char *fmt, ...) {
     va_list vargs;
 
-    printfmt("!");
+    printfmt_nonl("!");
 
     va_start(vargs, fmt);
     vprintfmt(fmt, vargs);
     va_end(vargs);
 
-    printfmt("\n");
+    printfmt_nonl("\n");
 }
 
 
 void _Logging::errorln(const char *s) {
 
-    printfmt("!%s\n", s);
+    printfmt("!%s", s);
 }
 
 
 void _Logging::errorlnf(const char *fmt, ...) {
     va_list vargs;
 
-    printfmt("!");
+    printfmt_nonl("!");
 
     va_start(vargs, fmt);
     vprintfmt(fmt, vargs);
     va_end(vargs);
 
-    printfmt("\n");
+    printfmt_nonl("\n");
 }
