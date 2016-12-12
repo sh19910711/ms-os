@@ -16,12 +16,12 @@
 extern channel_t app_channel;
 extern channel_t channel_server;
 
-extern class _GPIO GPIO;
-extern class _GPIO I2C;
-extern class _Timer Timer;
+extern class _GPIO    GPIO;
+extern class _I2C     I2C;
+extern class _Timer   Timer;
 extern class _Logging Logging;
-extern class _HTTP HTTP;
-extern class _ENV ENV;
-extern class _Device Device;
+extern class _HTTP    HTTP;
+extern class _ENV     ENV;
+extern class _Device  Device;
 
 #endif

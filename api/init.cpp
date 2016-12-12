@@ -8,12 +8,13 @@
 
 channel_t app_channel;
 channel_t channel_server;
-class _GPIO GPIO;
-class _Timer Timer;
+class _GPIO    GPIO;
+class _I2C     I2C;
+class _Timer   Timer;
 class _Logging Logging;
-class _HTTP HTTP;
-class _ENV ENV;
-class _Device Device;
+class _HTTP    HTTP;
+class _ENV     ENV;
+class _Device  Device;
 
 
 static void mainloop() {
@@ -40,6 +41,7 @@ extern "C" void app_startup(void) {
     Logging = _Logging();
     Device  = _Device();
     GPIO    = _GPIO();
+    I2C     = _I2C();
     Timer   = _Timer();
     HTTP    = _HTTP();
     ENV     = _ENV();
