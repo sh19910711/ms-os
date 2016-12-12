@@ -6,19 +6,18 @@
 #include <string>
 
 #include "GPIO.h"
+#include "I2C.h"
 #include "Timer.h"
 #include "Device.h"
 #include "Logging.h"
 #include "HTTP.h"
 #include "ENV.h"
 
-// interfaces
-#define DRIVER_GPIO  1
-
 extern channel_t app_channel;
 extern channel_t channel_server;
 
 extern class _GPIO GPIO;
+extern class _GPIO I2C;
 extern class _Timer Timer;
 extern class _Logging Logging;
 extern class _HTTP HTTP;
