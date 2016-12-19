@@ -37,6 +37,7 @@ extern void setup();
 APP_YAML_TEMPLATE = """\
 name: app
 objs: [ {{ objs | join(',') }} ]
+stack_size: 3000
 requires:
   - channel
   - gpio
