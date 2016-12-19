@@ -1,0 +1,9 @@
+api: 1
+name: AQM0802A
+lang: c++
+
+sources:
+  - AQM0802A.cpp
+  - AQM0802A.h
+
+config:
